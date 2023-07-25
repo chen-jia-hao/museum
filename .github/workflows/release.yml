@@ -82,44 +82,44 @@ jobs:
 #          TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
 #          TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
 
-      - name: ls build
-        run: ls -R release/**
+
+#      - uses: actions/upload-artifact@v3
+#        with:
+#          name: artifacts
+#          path: |
+#            release/**/*windows*32*.*
+#            release/**/*windows*64*.*
+#            release/**/*mac*.*
+#            release/**/*linux*.*
+#            !release/**/*.blockmap
+#            !release/**/*.yml
+#          retention-days: 3
 
       - uses: actions/upload-artifact@v3
+        if: matrix.os == 'ubuntu-latest'
         with:
-          name: artifacts
+          name: artifacts-${{ matrix.arch }}
           path: |
-            release/**/*windows*32*.*
-            release/**/*windows*64*.*
-            release/**/*mac*.*
-            release/**/*linux*.*
-            !release/**/*.blockmap
-            !release/**/*.yml
-          retention-days: 3
+            ./target/${{ matrix.target }}/release/bundle/appimage/**.AppImage.*
+            ./target/${{ matrix.target }}/release/bundle/deb/**.deb
 
-#      - uses: actions/upload-artifact@v3
-#        if: matrix.os == 'ubuntu-latest'
-#        with:
-#          name: artifacts-${{ matrix.arch }}
-#          path: |
-#            ./target/${{ matrix.target }}/release/bundle/appimage/**.AppImage.*
-#            ./target/${{ matrix.target }}/release/bundle/deb/**.deb
-#
-#      - uses: actions/upload-artifact@v3
-#        if: matrix.os == 'macos-latest'
-#        with:
-#          name: artifacts-${{ matrix.arch }}
-#          path: |
-#            ./target/${{ matrix.target }}/release/bundle/dmg/**.dmg
-#            ./target/${{ matrix.target }}/release/bundle/macos/**.app.*
-#
-#      - uses: actions/upload-artifact@v3
-#        if: matrix.os == 'windows-latest'
-#        with:
-#          name: artifacts-${{ matrix.arch }}
-#          path: |
-#            ./target/${{ matrix.target }}/release/bundle/msi/**
+      - uses: actions/upload-artifact@v3
+        if: matrix.os == 'macos-latest'
+        with:
+          name: artifacts-${{ matrix.arch }}
+          path: |
+            ./target/${{ matrix.target }}/release/bundle/dmg/**.dmg
+            ./target/${{ matrix.target }}/release/bundle/macos/**.app.*
 
+      - uses: actions/upload-artifact@v3
+        if: matrix.os == 'windows-latest'
+        with:
+          name: artifacts-${{ matrix.arch }}
+          path: |
+            ./target/${{ matrix.target }}/release/bundle/msi/**
+
+      - name: ls build
+        run: ls -R ./target/**
 
   release-museum:
     needs: build-museum
@@ -138,14 +138,14 @@ jobs:
       - name: Download x86_64 artifacts
         uses: actions/download-artifact@v3
         with:
-          name: artifacts
-          path: artifacts
+          name: artifacts-x86_64
+          path: artifacts/x86_64
 
       - name: Download aarch64 artifacts
         uses: actions/download-artifact@v3
         with:
-          name: artifacts
-          path: artifacts
+          name: artifacts-aarch64
+          path: artifacts/aarch64
 
 #      - name: Rename artifacts
 #        run: |
