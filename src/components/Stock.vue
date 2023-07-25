@@ -104,42 +104,48 @@ onBeforeUnmount(() => {
     </el-row>
     <el-divider/>
     <el-row :gutter="20">
-      <span class="ml-3 w-35 text-gray-600 inline-flex items-center"
-      >空白</span
-      >
-        <div>
-            <el-date-picker
-                    v-model="date"
-                    class="w-50 m-2"
-                    type="date"
-                    placeholder="Pick a day"
-                    :disabled-date="disabledDate"
-                    :shortcuts="shortcuts"
-                    :size="'default'"
-            />
-        </div>
+        <el-col :span="8">
+            <!--      <span class="ml-3 w-35 text-gray-600 inline-flex items-center"
+                  >空白</span
+                  >-->
+            <div>
+                <el-date-picker
+                        v-model="date"
+                        class="w-50 m-2"
+                        type="date"
+                        placeholder="Pick a day"
+                        :disabled-date="disabledDate"
+                        :shortcuts="shortcuts"
+                        size="small"
+                />
+            </div>
+        </el-col>
+        <el-col :span="8">
+            <span class="ml-3 w-35 text-gray-600 inline-flex items-center">期望票数：</span>
+            <el-input-number v-model="quantity" size="small" :min="1" :max="10" controls-position="right" label="票数"/>
 
-
-        <el-input-number v-model="quantity" :min="1" :max="10" controls-position="right" label="票数"/>
-
-
-        <el-input v-model="interval" placeholder="Please input">
-            <template #prepend>间隔</template>
-            <template #append>ms</template>
-        </el-input>
-
+        </el-col>
+            <el-col :span="8">
+            <el-input v-model="interval" size="small" placeholder="Please input">
+                <template #prepend>间隔</template>
+                <template #append>ms</template>
+            </el-input>
+        </el-col>
     </el-row>
 
     <el-row class="row-bg" justify="center">
         <el-col :span="20">
             <el-radio-group v-model="timePart">
-                <el-radio-button v-for="times in timeFragments" :label="times.label">{{ times.value }}</el-radio-button>
+                <el-radio-button size="small" v-for="times in timeFragments" :label="times.label">{{
+                    times.value
+                    }}
+                </el-radio-button>
             </el-radio-group>
         </el-col>
     </el-row>
     <el-divider/>
     <el-card class="box-card">
-        <el-scrollbar height="400px" ref="scrollbarRef">
+        <el-scrollbar height="280px" ref="scrollbarRef">
             <div ref="innerRef">
                 <div v-for="o in logs" :key="o">{{ o }}</div>
             </div>
