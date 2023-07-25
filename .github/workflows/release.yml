@@ -78,31 +78,48 @@ jobs:
       - run: pnpm build --target ${{ matrix.target }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 #          TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
 #          TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
 
-      - uses: actions/upload-artifact@v3
-        if: matrix.os == 'ubuntu-latest'
-        with:
-          name: artifacts-${{ matrix.arch }}
-          path: |
-            ./target/${{ matrix.target }}/release/bundle/appimage/**.AppImage.*
-            ./target/${{ matrix.target }}/release/bundle/deb/**.deb
+      - name: ls build
+        run: ls -R release/**
 
       - uses: actions/upload-artifact@v3
-        if: matrix.os == 'macos-latest'
         with:
-          name: artifacts-${{ matrix.arch }}
+          name: artifacts
           path: |
-            ./target/${{ matrix.target }}/release/bundle/dmg/**.dmg
-            ./target/${{ matrix.target }}/release/bundle/macos/**.app.*
+            release/**/*windows*32*.*
+            release/**/*windows*64*.*
+            release/**/*mac*.*
+            release/**/*linux*.*
+            !release/**/*.blockmap
+            !release/**/*.yml
+          retention-days: 3
 
-      - uses: actions/upload-artifact@v3
-        if: matrix.os == 'windows-latest'
-        with:
-          name: artifacts-${{ matrix.arch }}
-          path: |
-            ./target/${{ matrix.target }}/release/bundle/msi/**
+#      - uses: actions/upload-artifact@v3
+#        if: matrix.os == 'ubuntu-latest'
+#        with:
+#          name: artifacts-${{ matrix.arch }}
+#          path: |
+#            ./target/${{ matrix.target }}/release/bundle/appimage/**.AppImage.*
+#            ./target/${{ matrix.target }}/release/bundle/deb/**.deb
+#
+#      - uses: actions/upload-artifact@v3
+#        if: matrix.os == 'macos-latest'
+#        with:
+#          name: artifacts-${{ matrix.arch }}
+#          path: |
+#            ./target/${{ matrix.target }}/release/bundle/dmg/**.dmg
+#            ./target/${{ matrix.target }}/release/bundle/macos/**.app.*
+#
+#      - uses: actions/upload-artifact@v3
+#        if: matrix.os == 'windows-latest'
+#        with:
+#          name: artifacts-${{ matrix.arch }}
+#          path: |
+#            ./target/${{ matrix.target }}/release/bundle/msi/**
+
 
   release-museum:
     needs: build-museum
@@ -121,42 +138,42 @@ jobs:
       - name: Download x86_64 artifacts
         uses: actions/download-artifact@v3
         with:
-          name: artifacts-x86_64
-          path: artifacts/x86_64
+          name: artifacts
+          path: artifacts
 
       - name: Download aarch64 artifacts
         uses: actions/download-artifact@v3
         with:
-          name: artifacts-aarch64
-          path: artifacts/aarch64
+          name: artifacts
+          path: artifacts
 
-      - name: Rename artifacts
-        run: |
-          mv "artifacts/aarch64/dmg/museum_${{ env.version }}_aarch64.dmg" "artifacts/museum_${{ env.version }}_macos_aarch64.dmg"
-          mv "artifacts/aarch64/macos/museum.app.tar.gz" "artifacts/museum_${{ env.version }}_macos_aarch64.app.tar.gz"
-          mv "artifacts/aarch64/macos/museum.app.tar.gz.sig" "artifacts/museum_${{ env.version }}_macos_aarch64.app.tar.gz.sig"
-
-          mv "artifacts/x86_64/dmg/museum_${{ env.version }}_x64.dmg" "artifacts/museum_${{ env.version }}_macos_x86_64.dmg"
-          mv "artifacts/x86_64/macos/museum.app.tar.gz" "artifacts/museum_${{ env.version }}_macos_x86_64.app.tar.gz"
-          mv "artifacts/x86_64/macos/museum.app.tar.gz.sig" "artifacts/museum_${{ env.version }}_macos_x86_64.app.tar.gz.sig"
-
-          mv "artifacts/x86_64/deb/museum_${{ env.version }}_amd64.deb" "artifacts/x86_64/deb/museum_${{ env.version }}_linux_x86_64.deb"
-          mv "artifacts/x86_64/appimage/museum_${{ env.version }}_amd64.AppImage.tar.gz" "artifacts/museum_${{ env.version }}_linux_x86_64.AppImage.tar.gz"
-          mv "artifacts/x86_64/appimage/museum_${{ env.version }}_amd64.AppImage.tar.gz.sig" "artifacts/museum_${{ env.version }}_linux_x86_64.AppImage.tar.gz.sig"
-
-          mv "artifacts/x86_64/museum_${{ env.version }}_x64_en-US.msi" "artifacts/museum_${{ env.version }}_windows_x86_64.msi"
-          mv "artifacts/x86_64/museum_${{ env.version }}_x64_en-US.msi.zip" "artifacts/museum_${{ env.version }}_windows_x86_64.msi.zip"
-          mv "artifacts/x86_64/museum_${{ env.version }}_x64_en-US.msi.zip.sig" "artifacts/museum_${{ env.version }}_windows_x86_64.msi.zip.sig"
-
-      - name: Create Release
-        uses: softprops/action-gh-release@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v${{ env.version }}
-          name: museum v${{ env.version }}
-          body: See the assets to download this version and install.
-          prerelease: false
-          generate_release_notes: false
-          files: ./artifacts/**/*
+#      - name: Rename artifacts
+#        run: |
+#          mv "artifacts/aarch64/dmg/museum_${{ env.version }}_aarch64.dmg" "artifacts/museum_${{ env.version }}_macos_aarch64.dmg"
+#          mv "artifacts/aarch64/macos/museum.app.tar.gz" "artifacts/museum_${{ env.version }}_macos_aarch64.app.tar.gz"
+#          mv "artifacts/aarch64/macos/museum.app.tar.gz.sig" "artifacts/museum_${{ env.version }}_macos_aarch64.app.tar.gz.sig"
+#
+#          mv "artifacts/x86_64/dmg/museum_${{ env.version }}_x64.dmg" "artifacts/museum_${{ env.version }}_macos_x86_64.dmg"
+#          mv "artifacts/x86_64/macos/museum.app.tar.gz" "artifacts/museum_${{ env.version }}_macos_x86_64.app.tar.gz"
+#          mv "artifacts/x86_64/macos/museum.app.tar.gz.sig" "artifacts/museum_${{ env.version }}_macos_x86_64.app.tar.gz.sig"
+#
+#          mv "artifacts/x86_64/deb/museum_${{ env.version }}_amd64.deb" "artifacts/x86_64/deb/museum_${{ env.version }}_linux_x86_64.deb"
+#          mv "artifacts/x86_64/appimage/museum_${{ env.version }}_amd64.AppImage.tar.gz" "artifacts/museum_${{ env.version }}_linux_x86_64.AppImage.tar.gz"
+#          mv "artifacts/x86_64/appimage/museum_${{ env.version }}_amd64.AppImage.tar.gz.sig" "artifacts/museum_${{ env.version }}_linux_x86_64.AppImage.tar.gz.sig"
+#
+#          mv "artifacts/x86_64/museum_${{ env.version }}_x64_en-US.msi" "artifacts/museum_${{ env.version }}_windows_x86_64.msi"
+#          mv "artifacts/x86_64/museum_${{ env.version }}_x64_en-US.msi.zip" "artifacts/museum_${{ env.version }}_windows_x86_64.msi.zip"
+#          mv "artifacts/x86_64/museum_${{ env.version }}_x64_en-US.msi.zip.sig" "artifacts/museum_${{ env.version }}_windows_x86_64.msi.zip.sig"
+#
+#      - name: Create Release
+#        uses: softprops/action-gh-release@master
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        with:
+#          tag_name: v${{ env.version }}
+#          name: museum v${{ env.version }}
+#          body: See the assets to download this version and install.
+#          prerelease: false
+#          generate_release_notes: false
+#          files: ./artifacts/**/*
 
