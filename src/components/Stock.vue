@@ -105,7 +105,7 @@ onBeforeUnmount(() => {
     <el-divider/>
     <el-row :gutter="20">
       <span class="ml-3 w-35 text-gray-600 inline-flex items-center"
-      >Using attributes</span
+      >空白</span
       >
         <div>
             <el-date-picker
