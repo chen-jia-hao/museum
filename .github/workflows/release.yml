@@ -81,17 +81,17 @@ jobs:
 #          echo '----'
 #          ls -R ./src-tauri
 
-#      - name: upload file
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: artifacts
-#          path: |
-#            ./src-tauri/target/release/bundle/**/**.AppImage.*
-#            ./src-tauri/target/release/bundle/**/**.deb
-#            ./src-tauri/target/release/bundle/**/**.dmg
-#            ./src-tauri/target/release/bundle/**/**.app.*
-#            ./src-tauri/target/release/bundle/**/**.exe
-#            ./src-tauri/target/release/bundle/**/**.msi
+      - name: upload file
+        uses: actions/upload-artifact@v3
+        with:
+          name: artifacts
+          path: |
+            ./src-tauri/${{ matrix.target }}/target/release/bundle/**/**.AppImage
+            ./src-tauri/${{ matrix.target }}/target/release/bundle/**/**.deb
+            ./src-tauri/${{ matrix.target }}/target/release/bundle/**/**.dmg
+            ./src-tauri/${{ matrix.target }}/target/release/bundle/**/**.app
+            ./src-tauri/${{ matrix.target }}/target/release/bundle/**/**.exe
+            ./src-tauri/${{ matrix.target }}/target/release/bundle/**/**.msi
 
 #      - uses: tauri-apps/tauri-action@v0
 #        env:
@@ -112,9 +112,12 @@ jobs:
         run: echo "version=${GITHUB_REF:11}" >> $GITHUB_ENV
       - name: test env
         run: env
-#      - uses: actions/download-artifact@v2
-#        with:
-#          name: artifacts
-#          path: artifacts
+      - uses: actions/download-artifact@v2
+        with:
+          name: artifacts
+          path: artifacts
+      - name: ls file
+        run: |
+          ls -R ./artifacts
 
 
