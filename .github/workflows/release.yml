@@ -72,14 +72,14 @@ jobs:
         run: rustup target add ${{ matrix.target }}
 
       - run: pnpm build --target ${{ matrix.target }} && ls -R ./src-tauri
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#      - name: ls build dir
-#        run: |
-#          pwd
-#          ls
-#          echo '----'
-#          ls -R ./src-tauri
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: ls build dir
+        run: |
+          pwd
+          ls
+          echo '----'
+          ls -R ./src-tauri/target/${{ matrix.target }}/release/bundle/
 
       - name: upload file
         uses: actions/upload-artifact@v3
