@@ -80,7 +80,7 @@ jobs:
           pwd
           ls
           echo '----'
-          ls -R ./target/
+          ls -R ./src-tauri/target/release/bundle/
 
 
 #      - uses: tauri-apps/tauri-action@v0
