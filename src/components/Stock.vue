@@ -53,7 +53,7 @@ const logs = reactive([`${new Date().toLocaleString()} init`])
 watch(logs, () => {
   // console.log(scrollbarRef.value)
   // console.log(innerRef.value!.clientHeight)
-  if (innerRef.value!.clientHeight > 400) {
+  if (innerRef.value!.clientHeight > 280) {
     scrollbarRef.value!.setScrollTop(innerRef.value!.clientHeight)
   }
 }, {
@@ -66,12 +66,10 @@ const handleChange = () => {
     clearInterval(timer)
     timer = setInterval(() => {
       console.log(new Date().toLocaleString(), 'hi')
-      if (logs.length <= 100) {
-        logs.push(`${new Date().toLocaleString()} hi`)
-      } else {
+      if (logs.length > 100) {
         logs.shift()
-        logs.push(`${new Date().toLocaleString()} hi`)
       }
+      logs.push(`${new Date().toLocaleString()} ${Math.random()}`)
     }, interval.value)
   } else {
     console.log('stop')
