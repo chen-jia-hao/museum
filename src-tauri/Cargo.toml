@@ -1,7 +1,7 @@
 [package]
-name = "nuseum"
+name = "museum"
 version = "0.0.0"
-description = "A Tauri App"
+description = "museum"
 authors = ["you"]
 license = ""
 repository = ""

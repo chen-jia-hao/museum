@@ -1605,7 +1605,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "nuseum"
+name = "museum"
 version = "0.0.0"
 dependencies = [
  "serde",
