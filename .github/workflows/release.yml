@@ -72,8 +72,8 @@ jobs:
         run: rustup target add ${{ matrix.target }}
 
       - run: pnpm build --target ${{ matrix.target }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: ls build dir
         run: | 
           pwd
