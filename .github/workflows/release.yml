@@ -6,7 +6,7 @@ on:
       - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
 jobs:
-  publish-museum:
+  build-museum:
     permissions:
       contents: write
     strategy:
@@ -39,8 +39,8 @@ jobs:
       - name: Query version number
         run: |
           echo "version=${GITHUB_REF:11}" >> $GITHUB_ENV
-          echo $GITHUB_ENV
-          echo %version%
+          env
+          
 
       - name: Install pnpm
         uses: pnpm/action-setup@v2
@@ -61,16 +61,41 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
       - name: install frontend dependencies
-        run: pnpm install # change this to npm or pnpm depending on which one you use
-      - uses: tauri-apps/tauri-action@v0
+        run: pnpm install
+      - run: pnpm build --target ${{ matrix.target }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tagName: museum-${{ env.version }} # the action automatically replaces \_\_VERSION\_\_ with the app version
-          releaseName: museum-${{ env.version }}
-          releaseBody: 'See the assets to download this version and install.'
-          releaseDraft: true
-          prerelease: false
 
+      - name: ls build dir
+        run: | 
+          pwd
+          ls
+          echo '----'
+          ls -R ./target/
+
+
+#      - uses: tauri-apps/tauri-action@v0
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        with:
+#          tagName: museum-${{ env.version }} # the action automatically replaces \_\_VERSION\_\_ with the app version
+#          releaseName: museum-${{ env.version }}
+#          releaseBody: 'See the assets to download this version and install.'
+#          releaseDraft: true
+#          prerelease: false
+
+  release-museum:
+    needs: build-museum
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Query version number
+        run: echo "version=${GITHUB_REF:11}" >> $GITHUB_ENV
+      - name: test env
+        run: env
+#      - uses: actions/download-artifact@v2
+#        with:
+#          name: artifacts
+#          path: artifacts
 
 
