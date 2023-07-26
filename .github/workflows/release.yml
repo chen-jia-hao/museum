@@ -80,8 +80,20 @@ jobs:
           pwd
           ls
           echo '----'
-          ls -R ./src-tauri/target/release/bundle/
+#          ls -R ./src-tauri/target/release/bundle/
+          ls -R ./src-tauri
 
+#      - name: upload file
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: artifacts
+#          path: |
+#            ./src-tauri/target/release/bundle/**/**.AppImage.*
+#            ./src-tauri/target/release/bundle/**/**.deb
+#            ./src-tauri/target/release/bundle/**/**.dmg
+#            ./src-tauri/target/release/bundle/**/**.app.*
+#            ./src-tauri/target/release/bundle/**/**.exe
+#            ./src-tauri/target/release/bundle/**/**.msi
 
 #      - uses: tauri-apps/tauri-action@v0
 #        env:
