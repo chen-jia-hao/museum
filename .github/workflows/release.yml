@@ -88,7 +88,7 @@ jobs:
             ./src-tauri/target/${{ matrix.target }}/release/bundle/*/*.AppImage
             ./src-tauri/target/${{ matrix.target }}/release/bundle/*/*.deb
             ./src-tauri/target/${{ matrix.target }}/release/bundle/*/*.dmg
-            ./src-tauri/target/${{ matrix.target }}/release/bundle/*/*.app
+#            ./src-tauri/target/${{ matrix.target }}/release/bundle/*/*.app
             ./src-tauri/target/${{ matrix.target }}/release/bundle/*/*.exe
             ./src-tauri/target/${{ matrix.target }}/release/bundle/*/*.msi
 

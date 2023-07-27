@@ -51,9 +51,7 @@ const innerRef = ref()
 const logs = reactive([`${new Date().toLocaleString()} init`])
 
 watch(logs, () => {
-  // console.log(scrollbarRef.value)
-  // console.log(innerRef.value!.clientHeight)
-  if (innerRef.value!.clientHeight > 280) {
+  if (innerRef.value!.clientHeight > 400) {
     scrollbarRef.value!.setScrollTop(innerRef.value!.clientHeight)
   }
 }, {
@@ -85,75 +83,101 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
+    <el-container id="box">
+        <el-header class="head">
+            <el-row class="row-bg" justify="space-between">
+                <el-col :span="6">
+                    <p class="title">Museum</p>
+                </el-col>
+            </el-row>
+        </el-header>
+        <el-main style="height: auto">
+            <el-row :gutter="20" justify="space-between">
+                <el-col :span="8">
+                    <div>
+                        <el-date-picker
+                                v-model="date"
+                                class="w-50 m-2"
+                                type="date"
+                                placeholder="Pick a day"
+                                :disabled-date="disabledDate"
+                                :shortcuts="shortcuts"
+                                size="small"
+                        />
+                    </div>
+                </el-col>
+                <el-col :span="8">
+                    <span class="ml-3 w-35 text-gray-600 inline-flex items-center">期望票数：</span>
+                    <el-input-number v-model="quantity" size="small" :min="1" :max="10" controls-position="right"
+                                     label="票数"/>
 
+                </el-col>
+                <el-col :span="8">
+                    <el-input v-model="interval" size="small" placeholder="Please input">
+                        <template #prepend>间隔</template>
+                        <template #append>ms</template>
+                    </el-input>
+                </el-col>
+            </el-row>
 
-    <el-row class="row-bg" justify="center">
-        <el-col :span="6">
-            <el-switch
-                    v-model="isStart"
-                    size="large"
-                    inline-prompt
-                    active-text="开始"
-                    inactive-text="停止"
-                    @change="handleChange"
-                    style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
-            />
-        </el-col>
-    </el-row>
-    <el-divider/>
-    <el-row :gutter="20">
-        <el-col :span="8">
-            <!--      <span class="ml-3 w-35 text-gray-600 inline-flex items-center"
-                  >空白</span
-                  >-->
-            <div>
-                <el-date-picker
-                        v-model="date"
-                        class="w-50 m-2"
-                        type="date"
-                        placeholder="Pick a day"
-                        :disabled-date="disabledDate"
-                        :shortcuts="shortcuts"
-                        size="small"
-                />
-            </div>
-        </el-col>
-        <el-col :span="8">
-            <span class="ml-3 w-35 text-gray-600 inline-flex items-center">期望票数：</span>
-            <el-input-number v-model="quantity" size="small" :min="1" :max="10" controls-position="right" label="票数"/>
+            <el-row class="row-bg" justify="space-between">
+                <el-col :span="20">
+                    <el-radio-group v-model="timePart">
+                        <el-radio-button size="small" v-for="times in timeFragments" :label="times.label">{{
+                            times.value
+                            }}
+                        </el-radio-button>
+                    </el-radio-group>
+                </el-col>
 
-        </el-col>
-            <el-col :span="8">
-            <el-input v-model="interval" size="small" placeholder="Please input">
-                <template #prepend>间隔</template>
-                <template #append>ms</template>
-            </el-input>
-        </el-col>
-    </el-row>
+                <el-col :span="4">
+                    <el-switch
+                            v-model="isStart"
+                            size="large"
+                            inline-prompt
+                            active-text="开始"
+                            inactive-text="停止"
+                            @change="handleChange"
+                            style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+                    />
+                </el-col>
+            </el-row>
+            <el-divider/>
+            <el-card class="box-card">
+                <el-scrollbar ref="scrollbarRef">
+                    <div ref="innerRef">
+                        <div v-for="o in logs" :key="o">{{ o }}</div>
+                    </div>
 
-    <el-row class="row-bg" justify="center">
-        <el-col :span="20">
-            <el-radio-group v-model="timePart">
-                <el-radio-button size="small" v-for="times in timeFragments" :label="times.label">{{
-                    times.value
-                    }}
-                </el-radio-button>
-            </el-radio-group>
-        </el-col>
-    </el-row>
-    <el-divider/>
-    <el-card class="box-card">
-        <el-scrollbar height="280px" ref="scrollbarRef">
-            <div ref="innerRef">
-                <div v-for="o in logs" :key="o">{{ o }}</div>
-            </div>
-
-        </el-scrollbar>
-    </el-card>
+                </el-scrollbar>
+            </el-card>
+        </el-main>
+<!--        <el-footer>Footer</el-footer>-->
+    </el-container>
 </template>
 
 <style scoped>
-.el-row {
-    margin-bottom: 20px;
+
+.flex {
+    display: flex;
 }
+
+/*#box {
+    background-color: pink;
+}*/
+
+.title {
+    font-weight: bold;
+    color: #5BA3FA;
+    font-size: 20px;
+}
+
+.box-card {
+    height: 400px;
+}
+
+.head {
+   background-color: #F8FAFC;
+}
+
 </style>
