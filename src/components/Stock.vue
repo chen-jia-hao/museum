@@ -51,6 +51,8 @@ const innerRef = ref()
 const logs = reactive([`${new Date().toLocaleString()} init`])
 
 watch(logs, () => {
+  // console.log(innerRef.value!.clientHeight)
+  // console.log(scrollbarRef.value)
   if (innerRef.value!.clientHeight > 400) {
     scrollbarRef.value!.setScrollTop(innerRef.value!.clientHeight)
   }
@@ -58,12 +60,12 @@ watch(logs, () => {
   flush: 'post'
 })
 
+
 let timer: NodeJS.Timer
 const handleChange = () => {
   if (isStart.value) {
     clearInterval(timer)
     timer = setInterval(() => {
-      console.log(new Date().toLocaleString(), 'hi')
       if (logs.length > 100) {
         logs.shift()
       }
@@ -113,10 +115,10 @@ onBeforeUnmount(() => {
 
                 </el-col>
                 <el-col :span="8">
-                    <el-input v-model="interval" size="small" placeholder="Please input">
-                        <template #prepend>间隔</template>
-                        <template #append>ms</template>
-                    </el-input>
+                    <span class="ml-3 w-35 text-gray-600 inline-flex items-center">间隔毫秒：</span>
+                    <el-input-number v-model="interval" size="small" :min="1000" :max="100000" :step="500"
+                                     controls-position="right"
+                                     label="票数"/>
                 </el-col>
             </el-row>
 
@@ -143,16 +145,16 @@ onBeforeUnmount(() => {
                 </el-col>
             </el-row>
             <el-divider/>
-            <el-card class="box-card">
-                <el-scrollbar ref="scrollbarRef">
-                    <div ref="innerRef">
-                        <div v-for="o in logs" :key="o">{{ o }}</div>
-                    </div>
+            <el-card>
+                <el-scrollbar ref="scrollbarRef" id="log-scroll">
+
+                    <pre ref="innerRef">{{ logs.join('\n') }}</pre>
+
 
                 </el-scrollbar>
             </el-card>
         </el-main>
-<!--        <el-footer>Footer</el-footer>-->
+        <!--        <el-footer>Footer</el-footer>-->
     </el-container>
 </template>
 
@@ -162,9 +164,9 @@ onBeforeUnmount(() => {
     display: flex;
 }
 
-/*#box {
-    background-color: pink;
-}*/
+#log-scroll {
+    height: 400px;
+}
 
 .title {
     font-weight: bold;
@@ -172,12 +174,8 @@ onBeforeUnmount(() => {
     font-size: 20px;
 }
 
-.box-card {
-    height: 400px;
-}
-
 .head {
-   background-color: #F8FAFC;
+    background-color: #F8FAFC;
 }
 
 </style>
