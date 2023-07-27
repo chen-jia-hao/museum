@@ -88,19 +88,9 @@ jobs:
             ./src-tauri/target/${{ matrix.target }}/release/bundle/*/*.AppImage
             ./src-tauri/target/${{ matrix.target }}/release/bundle/*/*.deb
             ./src-tauri/target/${{ matrix.target }}/release/bundle/*/*.dmg
-#            ./src-tauri/target/${{ matrix.target }}/release/bundle/*/*.app
             ./src-tauri/target/${{ matrix.target }}/release/bundle/*/*.exe
             ./src-tauri/target/${{ matrix.target }}/release/bundle/*/*.msi
 
-#      - uses: tauri-apps/tauri-action@v0
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          tagName: museum-${{ env.version }} # the action automatically replaces \_\_VERSION\_\_ with the app version
-#          releaseName: museum-${{ env.version }}
-#          releaseBody: 'See the assets to download this version and install.'
-#          releaseDraft: true
-#          prerelease: false
 
   release-museum:
     needs: build-museum
